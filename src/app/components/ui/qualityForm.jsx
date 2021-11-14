@@ -1,10 +1,11 @@
 import React from 'react';
-import SelectField from '../common/form/selectField';
-import TextField from '../common/form/textField';
+
 import colors from '../../constants/colors.json';
 import useForm from '../../hooks/useForm';
+import SelectField from '../common/form/selectField';
+import TextField from '../common/form/textField';
 
-const QualityForm = ({ data, onSubmit }) => {
+const QualityForm = ({ onSubmit, data }) => {
   const { form, handleSubmit, handleChange } = useForm(data, onSubmit);
   return (
     <form onSubmit={handleSubmit}>
