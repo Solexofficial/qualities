@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 import qualityService from '../services/quality.service';
 
 const QualitiesContext = React.createContext();
@@ -13,6 +14,18 @@ export const QualitiesProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [isLoading, setLoading] = useState(true);
 
+  function errorCatcher(error) {
+    const { message } = error.response.data;
+    setError(message);
+  }
+
+  useEffect(() => {
+    if (error !== null) {
+      toast(error);
+      setError(null);
+    }
+  }, [error]);
+
   useEffect(() => {
     const getQualities = async () => {
       try {
@@ -20,8 +33,7 @@ export const QualitiesProvider = ({ children }) => {
         setQualities(content);
         setLoading(false);
       } catch (error) {
-        const { message } = error.response.data;
-        setError(message);
+        errorCatcher(error);
       }
     };
     getQualities();
@@ -44,8 +56,7 @@ export const QualitiesProvider = ({ children }) => {
       );
       return content;
     } catch (error) {
-      const { message } = error.response.data;
-      setError(message);
+      errorCatcher(error);
     }
   };
 
@@ -55,8 +66,7 @@ export const QualitiesProvider = ({ children }) => {
       setQualities(prevState => [...prevState, content]);
       return content;
     } catch (error) {
-      const { message } = error.response.data;
-      setError(message);
+      errorCatcher(error);
     }
   };
 
@@ -65,8 +75,7 @@ export const QualitiesProvider = ({ children }) => {
       const { content } = await qualityService.delete(id);
       setQualities(prevState => prevState.filter(item => item._id !== content._id));
     } catch (error) {
-      const { message } = error.response.data;
-      setError(message);
+      errorCatcher(error);
     }
   };
 
